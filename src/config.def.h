@@ -1,0 +1,3 @@
+/**
+ * scal configuration file
+ */

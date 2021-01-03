@@ -1,0 +1,3 @@
+build/*
+scal
+src/config.h
