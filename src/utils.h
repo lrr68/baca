@@ -2,7 +2,6 @@
 #define _UTILS_H
 
 	/* FUNCTION PROTOTYPES */
-	unsigned int hash(char *str, int mod);
 	int str2int(char *srt);
 	int is_letter(char l);
 	int is_digit(char l);

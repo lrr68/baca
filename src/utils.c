@@ -1,26 +1,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "lexan.h"
-
 /* FUNCTION DEFINITIONS */
-
-/* ************************** *
-              HASH
- * ************************** */
-unsigned int
-hash(char *str, int mod)
-{
-    unsigned int hash = 5381;
-    int c;
-
-    while ((c = *str++))
-        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
-
-    return (hash % mod);
-}
-
-
 
 /* ************************** *
            REGEX LIKE
