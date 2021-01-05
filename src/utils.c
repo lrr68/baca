@@ -4,42 +4,46 @@
 /* FUNCTION DEFINITIONS */
 
 /* ************************** *
-           REGEX LIKE
- * ************************** */
-int
-is_digit(char l)
-{
-	/* 0 to 9 ascii */
-	int ret= 0;
-	if (48 <= l && l <= 57)
-		ret= 1;
-	return ret;
-}
-
-int
-is_letter(char l)
-{
-	/* a-z ascii */
-	int ret= 0;
-	if (97 <= l && l <= 122)
-		ret= 1;
-	return ret;
-}
-
-int
-is_white(char l)
-{
-	/* tab, line feed, <CR>, space ascii */
-	int ret= 0;
-	if (l == 9 || l == 10 || l == 13 || l == 32)
-		ret= 1;
-	return ret;
-}
-
-
-/* ************************** *
       STRING MANIPULATION
  * ************************** */
+
+int
+str2int(char *str)
+{
+	int l = strlen(str);
+	int val = 1; /* position value */
+	int ret = 0;
+
+	/* from the end (less significative position)
+	 * multiplies each position by val (which is multiplied by 10 every iteraction)
+	 * the value of position - 48 (ascii str to number ratio)
+	 */
+	for (int i = l-1; i >= 0; --i) {
+		ret += (str[i]-48) * val;
+		val*=10;
+	}
+	return ret;
+}
+
+/* remove str's last character */
+char *
+shorten(char *str)
+{
+	char *ret;
+	int len = strlen(str);
+
+	if (len > 1)
+		return str;
+
+	ret = (char *) malloc(sizeof(char) * len);
+
+	for (int i=0; i<len-1; ++i)
+		ret[i] = str[i];
+
+	ret[len]='\0';
+
+	return ret;
+}
 
 /* remove whitespace outside strings */
 char *
@@ -59,7 +63,7 @@ remove_white(char *str)
 			concat = !concat; /* toogle */
 
 		/* concatenates non white or whites that should be concatenated */
-		if ( !is_white(str[i]) || concat)
+		if ( !IS_WHITE(str[i]) || concat)
 			ret[c++] = str[i];
 
 	}
@@ -93,58 +97,6 @@ remove_quotes(char *str)
 	return ret;
 }
 
-/* remove str's last character */
-char *
-encurtar(char *str)
-{
-	char *ret;
-	int len = strlen(str);
-
-	if (len > 1)
-		return str;
-
-	ret = (char *) malloc(sizeof(char) * len);
-
-	for (int i=0; i<len-1; ++i)
-		ret[i] = str[i];
-
-	ret[len]='\0';
-
-	return ret;
-}
-
-char *
-concatenate(char *str, const char *suffix)
-{
-	int l_str = strlen(str);
-	int l_suffix = strlen(suffix);
-
-	str = realloc(str, sizeof(char) * (l_str + l_suffix + 1));
-
-	strncpy(&str[l_str], suffix, l_suffix);
-	str[l_str + l_suffix] = '\0';
-
-	return str;
-}
-
-int
-str2int(char *str)
-{
-	int l = strlen(str);
-	int val = 1; /* position value */
-	int ret = 0;
-
-	/* from the end (less significative position)
-	 * multiplies each position by val (which is multiplied by 10 every iteraction)
-	 * the value of position - 48 (ascii str to number ratio)
-	 */
-	for (int i = l-1; i >= 0; --i) {
-		ret += (str[i]-48) * val;
-		val*=10;
-	}
-	return ret;
-}
-
 char *
 remove_comment(char *str)
 {
@@ -170,4 +122,19 @@ remove_comment(char *str)
 	}
 
 	return ret;
+}
+
+
+char *
+concatenate(char *str, const char *suffix)
+{
+	int l_str = strlen(str);
+	int l_suffix = strlen(suffix);
+
+	str = realloc(str, sizeof(char) * (l_str + l_suffix + 1));
+
+	strncpy(&str[l_str], suffix, l_suffix);
+	str[l_str + l_suffix] = '\0';
+
+	return str;
 }

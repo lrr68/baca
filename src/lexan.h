@@ -21,7 +21,7 @@
 	} LexErr;
 
 	typedef enum {
-		ID,
+		ID = 1,
 		CONSTW,
 		CONSTV,
 		INT_TK,

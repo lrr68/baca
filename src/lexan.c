@@ -24,6 +24,26 @@ init_lexreg(void)
 }
 
 void
+do_state_0(int letter, *int state)
+{
+
+	switch (letter) {
+		case '%':
+			lexreg.tk = MOD;
+			lexreg.lex = concatenate(lexreg.lex, &letter);
+			*state = ACCEPT_LEX;
+			break;
+		case '?':
+			lexreg.tk = TERMIAL;
+			lexreg.lex = concatenate(lexreg.lex, &letter);
+			*state = ACCEPT_LEX;
+			break;
+		case '<++>':
+			break;
+	}
+}
+
+void
 lexan(void)
 {
 	int state = 0;
@@ -31,10 +51,10 @@ lexan(void)
 	int lexerr = 0;
 	int letter;
 
-	((curr_pos));
-
 	/* clear lexical register lexeme and token */
-	lexreg.lex = "";
+	if (lexreg.lex != NULL)
+		free(lexreg.lex);
+
 	lexreg.tk = 0;
 
 	while (state != ACCEPT_LEX && !lexerr && (letter = fgetc(in_file)) != EOF) {
@@ -43,9 +63,15 @@ lexan(void)
 		if (letter == LINEFEED || letter == CR)
 			line++;
 
+
 		if (state == 0) {
-			if (is_white(letter))
+
+			/* white space does not matter here */
+			if (IS_WHITE(letter))
 				continue;
+
+			/* recognize 1 char lexemes and beggining of longer lexemes */
+			do_state_0(letter, &state);
 
 		} else if (state == 1) {
 		} else if (state == 2) {
