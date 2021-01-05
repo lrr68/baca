@@ -13,7 +13,7 @@ This language is case-sensitive so myvariable and MYVARIABLE and all other case 
 
 Ids can start with letters or a underscore character, after the first character it may contain letters, numbers and underscores. It can not be composed only by underscores.
 
-Literal values can be typed as integers, floating point (left zero may be omited), hexadecimal (0x...), binary(0b...), octal(0o...) or duodecimal(0d...). These last 4 types only support integers currently. Strings must be enclosed in double quotes while a single character must be enclosed in single quotes, although a string containing only one character is allowed.
+Literal values can be typed as integers, floating point (left zero may be omited), hexadecimal (0x...), binary(0b...), octal(0o...) or duodecimal(0d...). These last 4 types only support integers currently. Literals typed as 0x, 0b, 0o and 0d are treated as 0. Strings must be enclosed in double quotes while a single character must be enclosed in single quotes, although a string containing only one character is allowed.
 
 Duodecimal values dec and el are represented by the letters D and E respectivelly.
 
@@ -26,14 +26,18 @@ By default scal will go into interactive mode. If a file is passed as a argument
 The values on the right are reserved words.
 
 <pre>
-id       | (\_+[a-z0-9]+([a-z0-9] U \_)\*) U ([a-z])([a-z0-9] U \_)\*
-constv   | ([0-9]\*\\.?[0-9]+) U 0x[abcdefABCDEF0-9]\* U 0b[01]\* U 0o[0-8]\* U 0d[0-9DEde]\* U ".\*" U '.'
+id       | (\_+\[a-z0-9\]([a-z0-9] U \_)\*) U ([a-z])([a-z0-9] U \_)\*
+constv   | ([0-9]\*\\.?[0-9]+) U 0x[abcdefABCDEF0-9]\* U 0b[01]\* U 0o[0-8]\* U 0d[0-9DEde]\* U ".[0-9]\*"
 constw   | 'const'
 int      | 'int'
 char     | 'char'
 string   | 'string'
 double   | 'double'
 bool     | 'bool'
+plus_e   | '+='
+minus_e  | '-='
+slash_e  | '/='
+times_e  | '\*='
 d_plus   | '++'
 d_minus  | '--'
 plus     | '+'
