@@ -30,6 +30,8 @@ add_reserved(void)
 	add_symbol("string", STRING_TK);
 	add_symbol("double", DOUBLE_TK);
 	add_symbol("bool", BOOL_TK);
+	add_symbol("def", DEF);
+	add_symbol("return", RETURN);
 	add_symbol("++", D_PLUS);
 	add_symbol("--", D_MINUS);
 	add_symbol("+", PLUS);

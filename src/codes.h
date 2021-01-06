@@ -58,6 +58,8 @@
 		C_CURLY,
 		O_BRACE,
 		C_BRACE,
+		DEF,
+		RETURN,
 	} Token;
 
 	typedef enum {
