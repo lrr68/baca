@@ -1,6 +1,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include "utils.h"
+
 /* FUNCTION DEFINITIONS */
 
 /* ************************** *
@@ -126,15 +128,20 @@ remove_comment(char *str)
 
 
 char *
-concatenate(char *str, const char *suffix)
+concatenate(char *str, const char *suffix, const int su_length)
 {
-	int l_str = strlen(str);
-	int l_suffix = strlen(suffix);
+	int l_str;
 
-	str = realloc(str, sizeof(char) * (l_str + l_suffix + 1));
+	if (str == NULL) {
+		l_str = 0;
+		str = calloc((su_length + 1), sizeof(char));
+	} else {
+		l_str = strlen(str);
+		str = realloc(str, sizeof(char) * (l_str + su_length + 1));
+	}
 
-	strncpy(&str[l_str], suffix, l_suffix);
-	str[l_str + l_suffix] = '\0';
+	strncpy(&str[l_str], suffix, su_length);
+	str[l_str + su_length] = '\0';
 
 	return str;
 }

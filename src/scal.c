@@ -5,12 +5,29 @@
 #include <string.h>
 
 #include "scal.h"
+#include "lexan.h"
 
 /* GLOBAL VARIABLES */
 FILE *in_file;      /* input file      */
 char *in_file_name; /* input file name */
+ScalErr scal_err;   /* error code      */
 
 /* FUNCTION DEFINITIONS */
+void
+scal_abort()
+{
+	switch (scal_err) {
+		case ER_LEX_UNID:
+			printf("Character not expected at line %d, col %d\n", line, column);
+			break;
+		case ER_LEX_EOF:
+			printf("Unexpected EOF at line %d", line);
+			break;
+	}
+
+	exit(-(scal_err));
+}
+
 void
 start_scal(void)
 {
@@ -72,6 +89,12 @@ main(int argc, char *argv[])
 		}
 	} else {
 		in_file = stdin;
+	}
+
+	init_lexreg();
+	while (!eofound) {
+		lexan();
+		printf("%s\n", lexreg.lex);
 	}
 
 	return 0;

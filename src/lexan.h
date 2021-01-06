@@ -15,11 +15,11 @@
 			  case 'K': case 'L': case 'M': case 'N': \
 			  case 'O': case 'P': case 'Q': case 'R': \
 			  case 'S': case 'T': case 'U': case 'V': \
-			  case 'W': case 'X': case 'Y': case 'Z': \
+			  case 'W': case 'X': case 'Y': case 'Z'
 
-	#define 1_TO_9 '1': case '2': case '3': \
-              case '4': case '5': case '6': \
-			  case '7': case '8': case '9':
+	#define ONE_TO_NINE '1': case '2': case '3': \
+                   case '4': case '5': case '6': \
+			       case '7': case '8': case '9'
 
 	/*#define DEBUG_LEX*/
 	#ifdef DEBUG_LEX
@@ -30,16 +30,11 @@
 
 
 	/* TYPES */
-	typedef enum {
-		ER_LEX = 1,
-		ER_LEX_EOF,
-		ER_LEX_UNID,
-	} LexErr;
 
 	typedef enum {
 		ID = 1,
 		CONSTW,
-		CONSTV,
+		LITERAL,
 		INT_TK,
 		CHAR_TK,
 		STRING_TK,
@@ -115,9 +110,11 @@
 	};
 
 	/* GLOBAL VARIABLES */
-	extern int line;                  /* line number      */
-	extern int eofound = 0;           /* reached EOF ?           */
-	extern struct lexical_reg lexreg; /* lexical register */
+	extern int line;                  /* line number       */
+	extern int column;                /* column number     */
+	extern int eofound;               /* reached EOF ?     */
+	extern char *lex_err_msg;         /* error information */
+	extern struct lexical_reg lexreg; /* lexical register  */
 
 	/* FUNCTION PROTOTYPES */
 	void lexan(void);

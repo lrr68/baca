@@ -1,5 +1,6 @@
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "scal.h"
 #include "codes.h"
@@ -9,8 +10,10 @@
 /* GLOBAL VARIABLES */
 int state;
 int line = 1;
+int column = 0;
 int eofound = 0;    /* reached EOF ?           */
 int been_read = 0;  /* already read next char? */
+char *lex_err_msg;  /* error information       */
 struct lexical_reg lexreg;
 
 /* FUNCTION DEFINITIONS */
@@ -19,7 +22,8 @@ init_lexreg(void)
 {
 	lexreg.pos = 0;
 	lexreg.size = 0;
-	lexreg.lex = NULL;
+	lexreg.lex = malloc(sizeof(char));
+	*lexreg.lex = '\0';
 	lexreg.type = 0;
 	lexreg.tk = 0;
 	lexreg.cl = 0;
@@ -31,19 +35,19 @@ do_state_1(int letter)
 {
 	switch (letter) {
 		case '=':
-			reglex.tk = TIMES_E;
-			reglex = concatenate(reglex.lex, (char *) &letter);
+			lexreg.tk = TIMES_E;
+			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 			break;
 		case '*':
-			reglex.tk = POWER;
-			reglex = concatenate(reglex.lex, (char *) &letter);
+			lexreg.tk = POWER;
+			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 			break;
 		default:
-			reglex.tk = TIMES;
+			lexreg.tk = TIMES;
 			/* read a next token character next lexan call
 			 * does not have to read the first character */
 			if (!IS_WHITE(letter))
-				been_read = 1;
+				been_read = letter;
 	}
 	state = ACCEPT_LEX;
 }
@@ -53,19 +57,19 @@ do_state_2(int letter)
 {
 	switch (letter) {
 		case '+':
-			reglex.tk = D_PLUS;
-			reglex = concatenate(reglex.lex, (char *) &letter);
+			lexreg.tk = D_PLUS;
+			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 			break;
 		case '=':
-			reglex.tk = PLUS_E;
-			reglex = concatenate(reglex.lex, (char *) &letter);
+			lexreg.tk = PLUS_E;
+			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 			break;
 		default:
-			reglex.tk = PLUS;
+			lexreg.tk = PLUS;
 			/* read a next token character next lexan call
 			 * does not have to read the first character */
 			if (!IS_WHITE(letter))
-				been_read = 1;
+				been_read = letter;
 	}
 	state = ACCEPT_LEX;
 }
@@ -75,19 +79,19 @@ do_state_3(int letter)
 {
 	switch (letter) {
 		case '-':
-			reglex.tk = D_MINUS;
-			reglex = concatenate(reglex.lex, (char *) &letter);
+			lexreg.tk = D_MINUS;
+			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 			break;
 		case '=':
-			reglex.tk = MINUS_E;
-			reglex = concatenate(reglex.lex, (char *) &letter);
+			lexreg.tk = MINUS_E;
+			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 			break;
 		default:
-			reglex.tk = MINUS;
+			lexreg.tk = MINUS;
 			/* read a next token character next lexan call
 			 * does not have to read the first character */
 			if (!IS_WHITE(letter))
-				been_read = 1;
+				been_read = letter;
 	}
 	state = ACCEPT_LEX;
 }
@@ -96,22 +100,22 @@ void /* reading / or /= or beggining of comment */
 do_state_4(int letter)
 {
 	switch (letter) {
-		case '*':
+		case '*': /* beggining of comment, discard lexeme */
 			state = 5;
-			reglex = concatenate(reglex.lex, (char *) &letter);
+			*lexreg.lex = '\0';
 			break;
 		case '=':
 			state = ACCEPT_LEX;
-			reglex.tk = SLASH_E;
-			reglex = concatenate(reglex.lex, (char *) &letter);
+			lexreg.tk = SLASH_E;
+			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 			break;
 		default:
 			state = ACCEPT_LEX;
-			reglex.tk = SLASH;
+			lexreg.tk = SLASH;
 			/* read a next token character next lexan call
 			 * does not have to read the first character */
 			if (!IS_WHITE(letter))
-				been_read = 1;
+				been_read = letter;
 	}
 }
 
@@ -132,245 +136,422 @@ do_state_6(int letter)
 {
 	switch (letter) {
 		case '/': /* end comment */
-			state = ACCEPT_LEX;
+			state = 0;
 			break;
 		default: /* '*' inside */
 			state = 5;
 	}
 }
 
-void /* := */
+void /* reading := */
 do_state_7(int letter)
 {
 	switch (letter) {
 		case '=':
 			state = ACCEPT_LEX;
-			reglex.tk = EQUALS;
-			reglex = concatenate(reglex.lex, (char *) &letter);
+			lexreg.tk = EQUALS;
+			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 			break;
 		default: /* lexeme unidentified */
-			reglex = concatenate(reglex.lex, (char *) &letter);
-			lexerr = ER_LEX_UNID;
+			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
+			scal_err = ER_LEX_UNID;
 	}
 }
 
-void /* = or == */
+void /* reading = or == */
 do_state_8(int letter)
 {
 	switch (letter) {
 		case '=':
-			reglex.tk = EQUALITY;
-			reglex = concatenate(reglex.lex, (char *) &letter);
+			lexreg.tk = EQUALITY;
+			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 			break;
 		default:
-			reglex.tk = EQUALS;
+			lexreg.tk = EQUALS;
 			/* read a next token character next lexan call
 			 * does not have to read the first character */
 			if (!IS_WHITE(letter))
-				been_read = 1;
+				been_read = letter;
 	}
 
 	state = ACCEPT_LEX;
 }
 
-void /* bitwise or logical and operation */
+void /* reading bitwise or logical and operation */
 do_state_9(int letter)
 {
 	switch (letter) {
 		case '&':
-			reglex.tk = AND;
-			reglex = concatenate(reglex.lex, (char *) &letter);
+			lexreg.tk = AND;
+			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 			break;
 		default:
-			reglex.tk = B_AND;
+			lexreg.tk = B_AND;
 			/* read a next token character next lexan call
 			 * does not have to read the first character */
 			if (!IS_WHITE(letter))
-				been_read = 1;
+				been_read = letter;
 	}
 
 	state = ACCEPT_LEX;
 }
 
-void /* bitwise or logical or operation */
+void /* reading bitwise or logical or operation */
 do_state_10(int letter)
 {
 	switch (letter) {
 		case '|':
-			reglex.tk = OR;
-			reglex = concatenate(reglex.lex, (char *) &letter);
+			lexreg.tk = OR;
+			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 			break;
 		default:
-			reglex.tk = B_OR;
+			lexreg.tk = B_OR;
 			/* read a next token character next lexan call
 			 * does not have to read the first character */
 			if (!IS_WHITE(letter))
-				been_read = 1;
+				been_read = letter;
 	}
 
 	state = ACCEPT_LEX;
 }
 
-void
+void /* reading > or >= */
 do_state_11(int letter)
 {
 	switch (letter) {
-		case '<++>':
+		case '=':
+			lexreg.tk = BIG_EQ;
+			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 			break;
+		default:
+			lexreg.tk = BIGGER;
+			/* read a next token character next lexan call
+			 * does not have to read the first character */
+			if (!IS_WHITE(letter))
+				been_read = letter;
 	}
 }
 
-void
+void /* reading < or <> or <= */
 do_state_12(int letter)
 {
 	switch (letter) {
-		case '<++>':
+		case '>':
+			lexreg.tk = DIFF;
+			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 			break;
+		case '=':
+			lexreg.tk = SML_EQ;
+			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
+			break;
+		default:
+			lexreg.tk = SMALLER;
+			/* read a next token character next lexan call
+			 * does not have to read the first character */
+			if (!IS_WHITE(letter))
+				been_read = letter;
 	}
 }
 
-void
+void /* reading an id starting with '_' */
 do_state_13(int letter)
 {
 	switch (letter) {
-		case '<++>':
+		case '_':
+			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 			break;
+		case A_TO_Z: /* FALLTHROUGH */
+		case '0':    /* FALLTHROUGH */
+		case ONE_TO_NINE:
+			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
+			state = 14;
+			break;
+		default:
+			scal_err = ER_LEX_UNID;
 	}
 }
 
-void
+void /* reading second part of an id [a-z0-9_]* */
 do_state_14(int letter)
 {
 	switch (letter) {
-		case '<++>':
+		case '_':     /* FALLTHROUGH */
+		case '0':     /* FALLTHROUGH */
+		case A_TO_Z:  /* FALLTHROUGH */
+		case ONE_TO_NINE:
+			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 			break;
+		default:
+			lexreg.tk = ID;
+			state = ACCEPT_LEX;
+			/* read a next token character next lexan call
+			 * does not have to read the first character */
+			if (!IS_WHITE(letter))
+				been_read = letter;
 	}
 }
 
-void
+void /* reading a float starting with a . needs at least 1 number after .*/
 do_state_15(int letter)
 {
 	switch (letter) {
-		case '<++>':
+		case '0':    /* FALLTHROUGH */
+		case ONE_TO_NINE:
+			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
+			state = 16;
 			break;
+
+		default:
+			scal_err = ER_LEX_UNID;
 	}
 }
 
-void
+void /* reading remainder of float after . */
 do_state_16(int letter)
 {
 	switch (letter) {
-		case '<++>':
+		case '0':    /* FALLTHROUGH */
+		case ONE_TO_NINE:
+			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 			break;
+
+		default:
+			state = ACCEPT_LEX;
+			lexreg.tk = LITERAL;
+			lexreg.type = DOUBLE;
+			/* read a next token character next lexan call
+			 * does not have to read the first character */
+			if (!IS_WHITE(letter))
+				been_read = letter;
 	}
 }
 
+/* reading a general number not starting with 0,
+ * may be integer or float */
 void
 do_state_17(int letter)
 {
 	switch (letter) {
-		case '<++>':
+		case '0':    /* FALLTHROUGH */
+		case ONE_TO_NINE:
+			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 			break;
+		case '.':
+			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
+			state = 18;
+			break;
+		default:
+			lexreg.tk = LITERAL;
+			state = ACCEPT_LEX;
+			lexreg.type = INT;
+			/* read a next token character next lexan call
+			 * does not have to read the first character */
+			if (!IS_WHITE(letter))
+				been_read = letter;
 	}
 }
 
+ /* reading floating part of a number.
+  * must have at least 1 number */
 void
 do_state_18(int letter)
 {
 	switch (letter) {
-		case '<++>':
+		case '0':    /* FALLTHROUGH */
+		case ONE_TO_NINE:
+			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
+			state = 19;
 			break;
+		default:
+			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
+			scal_err = ER_LEX_UNID;
 	}
 }
 
-void
+void /* reading remainder of floating part of the number */
 do_state_19(int letter)
 {
 	switch (letter) {
-		case '<++>':
+		case '0':    /* FALLTHROUGH */
+		case ONE_TO_NINE:
+			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 			break;
+		default:
+			state = ACCEPT_LEX;
+			lexreg.tk = LITERAL;
+			lexreg.type = DOUBLE;
+			/* read a next token character next lexan call
+			 * does not have to read the first character */
+			if (!IS_WHITE(letter))
+				been_read = letter;
 	}
 }
 
+/* reading a number starting with 0,
+ * may be binary, octal, decimal, duodecimal or hexadecimal */
 void
 do_state_20(int letter)
 {
 	switch (letter) {
-		case '<++>':
+		case 'b': /* BINARY */
+			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
+			state = 21;
 			break;
+		case 'o': /* OCTAL */
+			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
+			state = 22;
+			break;
+		case 'd': /* DUODECIMAL */
+			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
+			state = 23;
+			break;
+		case 'x': /* HEXADECIMAL */
+			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
+			state = 24;
+			break;
+		case '0': /* DECIMAL */
+		case ONE_TO_NINE:
+			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
+			state = 17;
+			break;
+		default:
+			scal_err = ER_LEX_UNID;
 	}
 }
 
-void
+void /* reading a binary value */
 do_state_21(int letter)
 {
 	switch (letter) {
-		case '<++>':
+		case '0': /* FALLTHROUGH */
+		case '1':
+			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 			break;
+		default:
+			state = ACCEPT_LEX;
+			lexreg.tk = LITERAL;
+			lexreg.type = INT;
+			/* read a next token character next lexan call
+			 * does not have to read the first character */
+			if (!IS_WHITE(letter))
+				been_read = letter;
 	}
 }
 
-void
+void /* reading a octal number */
 do_state_22(int letter)
 {
 	switch (letter) {
-		case '<++>':
+		case '0': /* FALLTHROUGH */
+		case '1': /* FALLTHROUGH */
+		case '2': /* FALLTHROUGH */
+		case '3': /* FALLTHROUGH */
+		case '4': /* FALLTHROUGH */
+		case '5': /* FALLTHROUGH */
+		case '6': /* FALLTHROUGH */
+		case '7': /* FALLTHROUGH */
+			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 			break;
+		default:
+			state = ACCEPT_LEX;
+			lexreg.tk = LITERAL;
+			lexreg.type = INT;
+			/* read a next token character next lexan call
+			 * does not have to read the first character */
+			if (!IS_WHITE(letter))
+				been_read = letter;
 	}
 }
 
-void
+void /* reading a duodecimal number */
 do_state_23(int letter)
 {
 	switch (letter) {
-		case '<++>':
+		case '0':    /* FALLTHROUGH */
+		case ONE_TO_NINE: /* FALLTHROUGH */
+		case 'D':    /* FALLTHROUGH */
+		case 'E':    /* FALLTHROUGH */
+		case 'd':    /* FALLTHROUGH */
+		case 'e':    /* FALLTHROUGH */
+			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 			break;
+		default:
+			state = ACCEPT_LEX;
+			lexreg.tk = LITERAL;
+			lexreg.type = INT;
+			/* read a next token character next lexan call
+			 * does not have to read the first character */
+			if (!IS_WHITE(letter))
+				been_read = letter;
 	}
 }
 
-void
+void /* reading a hexadecimal number */
 do_state_24(int letter)
 {
 	switch (letter) {
-		case '<++>':
+		case '0':    /* FALLTHROUGH */
+		case ONE_TO_NINE: /* FALLTHROUGH */
+		case 'a':    /* FALLTHROUGH */
+		case 'b':    /* FALLTHROUGH */
+		case 'c':    /* FALLTHROUGH */
+		case 'd':    /* FALLTHROUGH */
+		case 'e':    /* FALLTHROUGH */
+		case 'f':    /* FALLTHROUGH */
+		case 'A':    /* FALLTHROUGH */
+		case 'B':    /* FALLTHROUGH */
+		case 'C':    /* FALLTHROUGH */
+		case 'D':    /* FALLTHROUGH */
+		case 'E':    /* FALLTHROUGH */
+		case 'F':    /* FALLTHROUGH */
+			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 			break;
-	}
-}
-
-void
-do_state_25(int letter)
-{
-	switch (letter) {
-		case '<++>':
-			break;
+		default:
+			state = ACCEPT_LEX;
+			lexreg.tk = LITERAL;
+			lexreg.type = INT;
+			/* read a next token character next lexan call
+			 * does not have to read the first character */
+			if (!IS_WHITE(letter))
+				been_read = letter;
 	}
 }
 
 void
 lexan(void)
 {
-	int lexerr = 0;
 	int letter;
+	int zero_column = 0;  /* should zero the column ? */
+
+	scal_err = 0;
 
 	/* clear state */
 	state = 0;
 
 	/* clear lexical register lexeme and token */
-	if (lexreg.lex != NULL)
-		free(lexreg.lex);
+	*lexreg.lex = '\0';
 
 	lexreg.tk = 0;
 
 	if (been_read && !eofound) {
+		letter = been_read;
 		been_read = 0;
 		goto skip_read;
 	}
 
-	while (state != ACCEPT_LEX && !lexerr && (letter = fgetc(in_file)) != EOF) {
+	while (state != ACCEPT_LEX && !scal_err && (letter = fgetc(in_file)) != EOF) {
+		column++;
 skip_read:
+		if (zero_column)
+			column = 0;
+
 		/* always count the new line */
-		if (letter == LINEFEED || letter == CR)
+		if (letter == LINEFEED || letter == CR) {
 			line++;
+ 			/* only zeroes column after lexeme was read so
+			 * we save the current offset to it "zeroes" to the right position */
+			zero_column = column;
+		}
 
 		switch (state) {
 			case 0: /* reconizes first characters and single character lexemes */
@@ -382,233 +563,234 @@ skip_read:
 				switch (letter) {
 					case '*':
 						state = 1;
-						reglex = concatenate(reglex.lex, (char *) &letter);
+						lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 						break;
 
 					case '+':
 						state = 2;
-						reglex = concatenate(reglex.lex, (char *) &letter);
+						lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 						break;
 
 					case '-':
 						state = 3;
-						reglex = concatenate(reglex.lex, (char *) &letter);
+						lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 						break;
 
 					case '/':
 						state = 4;
-						reglex = concatenate(reglex.lex, (char *) &letter);
+						lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 						break;
 
 					case ':':
 						state = 7;
-						reglex = concatenate(reglex.lex, (char *) &letter);
+						lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 						break;
 
 					case '=':
 						state = 8;
-						reglex = concatenate(reglex.lex, (char *) &letter);
+						lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 						break;
 
 					case '&':
 						state = 9;
-						reglex = concatenate(reglex.lex, (char *) &letter);
+						lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 						break;
 
 					case '|':
 						state = 10;
-						reglex = concatenate(reglex.lex, (char *) &letter);
+						lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 						break;
 
 					case '>':
 						state = 11;
-						reglex = concatenate(reglex.lex, (char *) &letter);
+						lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 						break;
 
 					case '<':
 						state = 12;
-						reglex = concatenate(reglex.lex, (char *) &letter);
+						lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 						break;
 
 					case '_':
 						state = 13;
-						reglex = concatenate(reglex.lex, (char *) &letter);
+						lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 						break;
 
 					case A_TO_Z:
-						state = 15;
-						reglex = concatenate(reglex.lex, (char *) &letter);
+						state = 14;
+						lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 						break;
 
 					case '.':
-						state = 16;
-						reglex = concatenate(reglex.lex, (char *) &letter);
+						state = 15;
+						lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 						break;
 
-					case 1_TO_9:
-						state = 18;
-						reglex = concatenate(reglex.lex, (char *) &letter);
+					case ONE_TO_NINE:
+						state = 17;
+						lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 						break;
 
 					case '0':
-						state = 21;
-						reglex = concatenate(reglex.lex, (char *) &letter);
+						state = 20;
+						lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 						break;
 
 					case '%':
-						reglex.tk = MOD;
+						lexreg.tk = MOD;
 						state = ACCEPT_LEX;
-						reglex = concatenate(reglex.lex, (char *) &letter);
+						lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 						break;
 					case '?':
-						reglex.tk = TERMIAL;
+						lexreg.tk = TERMIAL;
 						state = ACCEPT_LEX;
-						reglex = concatenate(reglex.lex, (char *) &letter);
+						lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 						break;
 					case ';':
-						reglex.tk = SEMICO;
+						lexreg.tk = SEMICO;
 						state = ACCEPT_LEX;
-						reglex = concatenate(reglex.lex, (char *) &letter);
+						lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 						break;
 					case '(':
-						reglex.tk = O_BRACK;
+						lexreg.tk = O_BRACK;
 						state = ACCEPT_LEX;
-						reglex = concatenate(reglex.lex, (char *) &letter);
+						lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 						break;
 					case ')':
-						reglex.tk = C_BRACK;
+						lexreg.tk = C_BRACK;
 						state = ACCEPT_LEX;
-						reglex = concatenate(reglex.lex, (char *) &letter);
+						lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 						break;
 					case '[':
-						reglex.tk = O_BRACE;
+						lexreg.tk = O_BRACE;
 						state = ACCEPT_LEX;
-						reglex = concatenate(reglex.lex, (char *) &letter);
+						lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 						break;
 					case ']':
-						reglex.tk = C_BRACE;
+						lexreg.tk = C_BRACE;
 						state = ACCEPT_LEX;
-						reglex = concatenate(reglex.lex, (char *) &letter);
+						lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 						break;
 					case '{':
-						reglex.tk = O_CURLY;
+						lexreg.tk = O_CURLY;
 						state = ACCEPT_LEX;
-						reglex = concatenate(reglex.lex, (char *) &letter);
+						lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 						break;
 					case '}':
-						reglex.tk = C_CURLY;
+						lexreg.tk = C_CURLY;
 						state = ACCEPT_LEX;
-						reglex = concatenate(reglex.lex, (char *) &letter);
+						lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 						break;
 				}
 
 				break;
 
 			case 1:
-				do_state_1(letter, &state);
+				do_state_1(letter);
 				break;
 
 			case 2:
-				do_state_2(letter, &state);
+				do_state_2(letter);
 				break;
 
 			case 3:
-				do_state_3(letter, &state);
+				do_state_3(letter);
 				break;
 
 			case 4:
-				do_state_4(letter, &state);
+				do_state_4(letter);
 				break;
 
 			case 5:
-				do_state_5(letter, &state);
+				do_state_5(letter);
 				break;
 
 			case 6:
-				do_state_6(letter, &state);
+				do_state_6(letter);
 				break;
 
 			case 7:
-				do_state_7(letter, &state);
+				do_state_7(letter);
 				break;
 
 			case 8:
-				do_state_8(letter, &state);
+				do_state_8(letter);
 				break;
 
 			case 9:
-				do_state_9(letter, &state);
+				do_state_9(letter);
 				break;
 
 			case 10:
-				do_state_10(letter, &state);
+				do_state_10(letter);
 				break;
 
 			case 11:
-				do_state_11(letter, &state);
+				do_state_11(letter);
 				break;
 
 			case 12:
-				do_state_12(letter, &state);
+				do_state_12(letter);
 				break;
 
 			case 13:
-				do_state_13(letter, &state);
+				do_state_13(letter);
 				break;
 
 			case 14:
-				do_state_14(letter, &state);
+				do_state_14(letter);
 				break;
 
 			case 15:
-				do_state_15(letter, &state);
+				do_state_15(letter);
 				break;
 
 			case 16:
-				do_state_16(letter, &state);
+				do_state_16(letter);
 				break;
 
 			case 17:
-				do_state_17(letter, &state);
+				do_state_17(letter);
 				break;
 
 			case 18:
-				do_state_18(letter, &state);
+				do_state_18(letter);
 				break;
 
 			case 19:
-				do_state_19(letter, &state);
+				do_state_19(letter);
 				break;
 
 			case 20:
-				do_state_20(letter, &state);
+				do_state_20(letter);
 				break;
 
 			case 21:
-				do_state_21(letter, &state);
+				do_state_21(letter);
 				break;
 
 			case 22:
-				do_state_22(letter, &state);
+				do_state_22(letter);
 				break;
 
 			case 23:
-				do_state_23(letter, &state);
+				do_state_23(letter);
 				break;
 
 			case 24:
-				do_state_24(letter, &state);
+				do_state_24(letter);
 				break;
-
-			case 25:
-				do_state_25(letter, &state);
-				break;
-
 		}
 	}
 
 	if (letter == EOF)
 		eofound = 1;
+
+	if (scal_err) {
+		lex_err_msg = concatenate(lex_err_msg, (char *) &letter, 1);
+		scal_abort(scal_err);
+	}
+
 
 	DEBUGLEX("LEX: lexeme:%s token:%d type:%d size: %d\n",lexreg.lex,lexreg.tk,lexreg.type,lexreg.size);
 }

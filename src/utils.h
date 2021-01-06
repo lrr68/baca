@@ -12,6 +12,6 @@
 	char *remove_white(char *str);
 	char *remove_quotes(char *str);
 	char *remove_comment(char *str);
-	char *concatenate(char *beggining, char *end);
+	char *concatenate(char *beggining, const char *end, const int su_length);
 
 #endif
