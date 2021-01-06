@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "lexan.h"
+#include "codes.h"
 #include "symtable.h"
 
 /* GLOBAL VARIABLES */

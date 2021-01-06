@@ -4,6 +4,7 @@
 
 #include "scal.h"
 #include "codes.h"
+#include "symtable.h"
 #include "lexan.h"
 #include "utils.h"
 
@@ -286,6 +287,11 @@ do_state_14(int letter)
 		default:
 			lexreg.tk = ID;
 			state = ACCEPT_LEX;
+
+			/* adds to symbol table */
+			if (search_symbol(lexreg.lex) != NULL)
+				add_symbol(lexreg.lex, lexreg.tk);
+
 			/* read a next token character next lexan call
 			 * does not have to read the first character */
 			if (!IS_WHITE(letter))

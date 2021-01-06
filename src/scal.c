@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "codes.h"
 #include "symtable.h"
 #include "scal.h"
 #include "lexan.h"

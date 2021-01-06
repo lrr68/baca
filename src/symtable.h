@@ -27,7 +27,6 @@
 	};
 
 	/* FUNCTION PROTOTYPES */
-	Type type_find(char *identificador);
 	void clear_table(void);
 	void init_table(void);
 	void add_reserved(void);
