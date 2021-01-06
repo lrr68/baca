@@ -83,6 +83,12 @@
 		PRINT,
 		SEMICO,
 		PERIOD,
+		O_BRACK,
+		C_BRACK,
+		O_CURLY,
+		C_CURLY,
+		O_BRACE,
+		C_BRACE,
 	} Token;
 
 	typedef enum {

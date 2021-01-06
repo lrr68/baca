@@ -173,7 +173,7 @@ do_state_8(int letter)
 	state = ACCEPT_LEX;
 }
 
-void
+void /* bitwise or logical and operation */
 do_state_9(int letter)
 {
 	switch (letter) {
@@ -192,7 +192,7 @@ do_state_9(int letter)
 	state = ACCEPT_LEX;
 }
 
-void
+void /* bitwise or logical or operation */
 do_state_10(int letter)
 {
 	switch (letter) {
@@ -467,6 +467,36 @@ skip_read:
 						break;
 					case ';':
 						reglex.tk = SEMICO;
+						state = ACCEPT_LEX;
+						reglex = concatenate(reglex.lex, (char *) &letter);
+						break;
+					case '(':
+						reglex.tk = O_BRACK;
+						state = ACCEPT_LEX;
+						reglex = concatenate(reglex.lex, (char *) &letter);
+						break;
+					case ')':
+						reglex.tk = C_BRACK;
+						state = ACCEPT_LEX;
+						reglex = concatenate(reglex.lex, (char *) &letter);
+						break;
+					case '[':
+						reglex.tk = O_BRACE;
+						state = ACCEPT_LEX;
+						reglex = concatenate(reglex.lex, (char *) &letter);
+						break;
+					case ']':
+						reglex.tk = C_BRACE;
+						state = ACCEPT_LEX;
+						reglex = concatenate(reglex.lex, (char *) &letter);
+						break;
+					case '{':
+						reglex.tk = O_CURLY;
+						state = ACCEPT_LEX;
+						reglex = concatenate(reglex.lex, (char *) &letter);
+						break;
+					case '}':
+						reglex.tk = C_CURLY;
 						state = ACCEPT_LEX;
 						reglex = concatenate(reglex.lex, (char *) &letter);
 						break;
