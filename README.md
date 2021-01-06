@@ -27,7 +27,7 @@ The values on the right are reserved words.
 
 <pre>
 id       | (\_+\[a-z0-9\]([a-z0-9] U \_)\*) U ([a-z])([a-z0-9] U \_)\*
-constv   | ([0-9]\*\\.?[0-9]+) U 0x[abcdefABCDEF0-9]\* U 0b[01]\* U 0o[0-8]\* U 0d[0-9DEde]\* U ".[0-9]\*"
+literal  | ([0-9]\*\\.?[0-9]+) U 0x[abcdefABCDEF0-9]\* U 0b[01]\* U 0o[0-8]\* U 0d[0-9DEde]\* U ".[0-9]\*"
 constw   | 'const'
 int      | 'int'
 char     | 'char'
@@ -85,6 +85,8 @@ The language allows for declarations anywhere on the code. Like C, every command
 ++id and --id, are evaluated to the increased or decreased value of id, while id++ and id-- are evaluated to the value of id and then the command occurs.
 
 TODO: make a built in sum command (that greek E)
+TODO: function calls
+TODO: arrays (multidimensional too)
 
 + S     -> {comm | exprs}
 + comm  -> exprs | arit | loopf | loopw | loopd | test | read | print | plus | minus | pow | fcto | term | dec
