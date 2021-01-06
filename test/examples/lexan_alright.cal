@@ -1,0 +1,87 @@
+/* this is just a test file to test the lexical analyzer */
+a := 2;
+b := 3;
+c := (a + b) * 2;
+
+int _test;
+char _test2;
+string alou;
+double ____aaaa99999____aaa;
+bool eh_ou_nao_eh;
+const quarenta := 40;
+
+(1.0 + .42);
+
+a += 2;
+b -= 2;
+c *= 2;
+d /= 2;
+a++;
+b--;
+--a;
+++b;
+
+(a + b) - (b + c);
+(a * b) / (b * c);
+
+d := "alou\n";
+e := 'a';
+
+a % b;
+
+a ** b;
+
+b!;
+b?;
+
+b = c;
+c := b;
+
+c != b;
+c <> b;
+
+a > b;
+a >= b;
+
+b < a;
+b <= a;
+
+not (a == b);
+
+(a && b);
+a and b;
+a || b;
+a or b;
+
+c & d;
+d | e;
+
+while a || b {
+	a--;
+}
+
+a[0];
+
+for a=0; a < 10; ++a {
+	b++;
+}
+
+do {
+	++c;
+} while (!a);
+
+if a == b
+then
+	a = -a;
+elif a > b
+	a = -b;
+else if a < b
+	a = a + b;
+else
+	a = 0;
+
+read(a);
+input(a);
+
+print(b);
+write(b);
