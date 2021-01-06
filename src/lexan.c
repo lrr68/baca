@@ -230,6 +230,7 @@ do_state_11(int letter)
 			if (!IS_WHITE(letter))
 				been_read = letter;
 	}
+	state = ACCEPT_LEX;
 }
 
 void /* reading < or <> or <= */
@@ -251,6 +252,7 @@ do_state_12(int letter)
 			if (!IS_WHITE(letter))
 				been_read = letter;
 	}
+	state = ACCEPT_LEX;
 }
 
 void /* reading an id starting with '_' */
@@ -414,8 +416,15 @@ do_state_20(int letter)
 			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 			state = 17;
 			break;
-		default:
-			scal_err = ER_LEX_UNID;
+		default: /* value 0 */
+			state = ACCEPT_LEX;
+			lexreg.tk = LITERAL;
+			lexreg.type = INT;
+			/* read a next token character next lexan call
+			 * does not have to read the first character */
+			if (!IS_WHITE(letter))
+				been_read = letter;
+
 	}
 }
 

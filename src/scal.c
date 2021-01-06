@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "symtable.h"
 #include "scal.h"
 #include "lexan.h"
 
@@ -75,6 +76,11 @@ main(int argc, char *argv[])
 		}
 	}
 
+	/* initialize symbol table */
+	init_table();
+	/* initialize the lexical register */
+	init_lexreg();
+
 	/* interactive mode */
 	if (interactive) {
 		start_scal();
@@ -91,7 +97,6 @@ main(int argc, char *argv[])
 		in_file = stdin;
 	}
 
-	init_lexreg();
 	while (!eofound) {
 		lexan();
 		printf("%s\n", lexreg.lex);
