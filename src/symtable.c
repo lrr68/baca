@@ -36,6 +36,10 @@ add_reserved(void)
 	add_symbol("-", MINUS);
 	add_symbol("*", TIMES);
 	add_symbol("/", SLASH);
+	add_symbol("+=", PLUS_E);
+	add_symbol("-=", MINUS_E);
+	add_symbol("*=", TIMES_E);
+	add_symbol("/=", SLASH_E);
 	add_symbol("\\", B_SLASH);
 	add_symbol("%", MOD);
 	add_symbol("**", POWER);
@@ -68,6 +72,14 @@ add_reserved(void)
 	add_symbol("input", READ);
 	add_symbol("print", PRINT);
 	add_symbol("write", PRINT);
+	add_symbol(";", SEMICO);
+	add_symbol(".", PERIOD);
+	add_symbol("(", O_BRACK);
+	add_symbol(")", C_BRACK);
+	add_symbol("{", O_CURLY);
+	add_symbol("}", C_CURLY);
+	add_symbol("[", O_BRACE);
+	add_symbol("]", C_BRACE);
 }
 
 struct cell
@@ -111,7 +123,7 @@ struct cell
 	return ret;
 }
 
-/* printa a tabela de symbols */
+/* prints symbol table */
 void
 show_table(void)
 {
