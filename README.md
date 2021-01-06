@@ -35,6 +35,7 @@ string   | 'string'
 double   | 'double'
 bool     | 'bool'
 def      | 'def'
+return   | 'return'
 semico   | ';'
 period   | '.'
 plus_e   | '+='
@@ -53,7 +54,7 @@ power    | '\*\*'
 facto    | '!'
 termial  | '?'
 equals   | ':=' | '='
-diff     | '!=' | '<>'
+diff      | '!=' | '<>'
 bigger   | '>'
 big_eq   | '>='
 smaller  | '<'
@@ -105,9 +106,9 @@ TODO: arrays (multidimensional too)
 + spops -> _'+='_ | _'-='_ | _'/='_ | _'\*='_
 + plus  -> _'++'_ id
 + minus -> _'--'_ id
-+ pow   -> id '\*\*' exprs
-+ fcto  -> id _'!'_
-+ term  -> id '?'
++ pow   -> exprs '\*\*' exprs
++ fcto  -> exprs _'!'_
++ term  -> exprs'?'
 + type  -> _'int'_ | _'double'_ | _'string'_ | _'char'_ | _'bool'_
 
 + loopf -> _'for'_ ((attr | id) _'to'_ exprs _'step'_ exprs | _'('_ [attr] _';'_ exprs _';'_ exprs _')'_ ) (comm | _'{'_ {comm} _'}'_)
