@@ -2,7 +2,24 @@
 #define _LEXAN_H
 
 	#define IS_TOKEN(a, b) (strcmp(a, b) == 0)
-	#define ACCEPT_LEX 20
+	#define ACCEPT_LEX 26
+	#define A_TO_Z 'a': case 'b': case 'c': case 'd': \
+			  case 'e': case 'f': case 'g': case 'h': \
+			  case 'i': case 'j': case 'k': case 'l': \
+			  case 'm': case 'n': case 'o': case 'p': \
+			  case 'q': case 'r': case 's': case 't': \
+			  case 'u': case 'v': case 'w': case 'x': \
+			  case 'y': case 'z': case 'A': case 'B': \
+			  case 'C': case 'D': case 'E': case 'F': \
+			  case 'G': case 'H': case 'I': case 'J': \
+			  case 'K': case 'L': case 'M': case 'N': \
+			  case 'O': case 'P': case 'Q': case 'R': \
+			  case 'S': case 'T': case 'U': case 'V': \
+			  case 'W': case 'X': case 'Y': case 'Z': \
+
+	#define 1_TO_9 '1': case '2': case '3': \
+              case '4': case '5': case '6': \
+			  case '7': case '8': case '9':
 
 	/*#define DEBUG_LEX*/
 	#ifdef DEBUG_LEX
@@ -16,7 +33,6 @@
 	typedef enum {
 		ER_LEX = 1,
 		ER_LEX_EOF,
-		ER_LEX_INVD,
 		ER_LEX_UNID,
 	} LexErr;
 
@@ -35,6 +51,10 @@
 		MINUS,
 		TIMES,
 		SLASH,
+		PLUS_E,
+		MINUS_E,
+		TIMES_E,
+		SLASH_E,
 		B_SLASH,
 		MOD,
 		POWER,
@@ -61,6 +81,8 @@
 		ELSEIF,
 		READ,
 		PRINT,
+		SEMICO,
+		PERIOD,
 	} Token;
 
 	typedef enum {
@@ -88,7 +110,7 @@
 
 	/* GLOBAL VARIABLES */
 	extern int line;                  /* line number      */
-	extern char *read_lex;            /* lexeme read      */
+	extern int eofound = 0;           /* reached EOF ?           */
 	extern struct lexical_reg lexreg; /* lexical register */
 
 	/* FUNCTION PROTOTYPES */
