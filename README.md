@@ -34,6 +34,7 @@ char     | 'char'
 string   | 'string'
 double   | 'double'
 bool     | 'bool'
+def      | 'def'
 semico   | ';'
 period   | '.'
 plus_e   | '+='
@@ -85,13 +86,19 @@ The language allows for declarations anywhere on the code. Like C, every command
 ++id and --id, are evaluated to the increased or decreased value of id, while id++ and id-- are evaluated to the value of id and then the command occurs.
 
 TODO: make a built in sum command (that greek E)
+TODO: builtin avg, mean
 TODO: function calls
 TODO: arrays (multidimensional too)
 
-+ S     -> {comm | exprs}
-+ comm  -> exprs | arit | loopf | loopw | loopd | test | read | print | plus | minus | pow | fcto | term | dec
++ S     -> {comm | exprs | def}
++ comm  -> (exprs | arit | loopf | loopw | loopd | test | read | print | plus | minus | pow | fcto | term | decl | retr) _';'_
 
-+ dec   -> \[const\] \[type\] id (_':='_ | _'='_) exprs _';'_
++ decl  -> \[const\] \[type\] id (_':='_ | _'='_) exprs _';'_
++ def   -> _'def'_ id _'('_ idlis _') {'_ {comm | exprs}+ [retr] _'}'_
++ retr  -> _'return'_ exprs _';'_
+
++ idlis -> id {_','_ id}
++ call  -> id _'('_ lexpr _')'_
 
 + attr  -> id (_':='_ | _'='_) exprs _';'_
 + arit  -> id (spops exprs | _'++'_ | _'--'_) _';'_
@@ -114,8 +121,10 @@ TODO: arrays (multidimensional too)
 + exprs -> expr1 [ rel expr2 ]
 + expr  -> [_'-'_ | _'not'_] term1 {( _'+'_ | _'-'_ | _'|'_ | _'||'_ | _'or'_ ) term2}
 + term  -> fact1 {( _'*'_ | _'/'_ | _'%'_ | _'&'_ | _'&&'_ | _'and'_ ) fact2}
-+ fact  -> _'('_ exprs _')'_ | const | id | fcto | term | plus | minus | attr | arit
++ fact  -> _'('_ exprs _')'_ | const | id | fcto | term | plus | minus | attr | arit | call
 + rel   -> _'=='_ | _'!='_ | _'<>'_ | _'>'_ | _'<'_ | _'>='_ | _'<='_
+
++ lexpr -> exprs {, exprs}
 
 ## Future features:
 The following is a list of features that i would like to have on Scal.
