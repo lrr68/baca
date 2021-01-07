@@ -4,6 +4,7 @@
 
 #include "scal.h"
 #include "codes.h"
+#include "lang.h"
 #include "symtable.h"
 #include "lexan.h"
 #include "utils.h"
@@ -868,6 +869,12 @@ token_id(const char *t)
 
 	else if (IS_TOKEN(t, "print") || IS_TOKEN(t, "write"))
 		r = PRINT;
+
+	else if (IS_TOKEN(t, "return"))
+		r = RETURN;
+
+	else if (IS_TOKEN(t, "def"))
+		r = DEF;
 
 	return r;
 }

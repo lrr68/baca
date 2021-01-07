@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "codes.h"
+#include "lang.h"
 #include "symtable.h"
 
 /* GLOBAL VARIABLES */

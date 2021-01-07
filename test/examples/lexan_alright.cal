@@ -62,9 +62,12 @@ while a || b {
 
 a[0];
 
-for a=0; a < 10; ++a {
+for (a=0; a < 10; ++a) {
 	b++;
 }
+
+for a=0 to 10 step 2
+	b++;
 
 do {
 	++c;
@@ -85,3 +88,8 @@ input(a);
 
 print(b);
 write(b);
+
+def test(a, b, c)
+{
+	return 0;
+}

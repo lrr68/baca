@@ -1,0 +1,78 @@
+#ifndef _LANG_H
+#define _LANG_H
+
+	/* TYPES */
+	typedef enum {
+		ID = 1,
+		CONSTW,
+		LITERAL,
+		INT_TK,
+		CHAR_TK,
+		STRING_TK,
+		DOUBLE_TK,
+		BOOL_TK,
+		VOID_TK,
+		D_PLUS,
+		D_MINUS,
+		PLUS,
+		MINUS,
+		TIMES,
+		SLASH,
+		PLUS_E,
+		MINUS_E,
+		TIMES_E,
+		SLASH_E,
+		B_SLASH,
+		MOD,
+		POWER,
+		FACTO,
+		TERMIAL,
+		EQUALS,
+		DIFF,
+		BIGGER,
+		BIG_EQ,
+		SMALLER,
+		SML_EQ,
+		NOT,
+		AND,
+		OR,
+		B_AND,
+		B_OR,
+		EQUALITY,
+		WHILE,
+		FOR,
+		DO,
+		IF,
+		THEN,
+		ELSE,
+		ELSEIF,
+		READ,
+		PRINT,
+		SEMICO,
+		PERIOD,
+		O_BRACK,
+		C_BRACK,
+		O_CURLY,
+		C_CURLY,
+		O_BRACE,
+		C_BRACE,
+		DEF,
+		RETURN,
+	} Token;
+
+	typedef enum {
+		INT_TY = 1,
+		CHAR_TY,
+		STR_TY,
+		DOUBLE_TY,
+		BOOL_TY,
+		VOID_TY,
+	} Type;
+
+	typedef enum {
+		CONST = 1,
+		VAR,
+		FUNC,
+	} Class;
+
+#endif

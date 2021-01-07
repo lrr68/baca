@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "codes.h"
+#include "lang.h"
 #include "symtable.h"
 #include "scal.h"
 #include "lexan.h"
@@ -98,10 +98,7 @@ main(int argc, char *argv[])
 		in_file = stdin;
 	}
 
-	while (!eofound) {
-		lexan();
-		printf("%s\n", lexreg.lex);
-	}
+	start_synal();
 
 	return 0;
 }
