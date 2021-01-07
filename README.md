@@ -88,30 +88,30 @@ The language allows for declarations anywhere on the code. Like C, every command
 
 TODO: make a built in sum command (that greek E)
 TODO: builtin avg, mean
-TODO: function calls
 TODO: arrays (multidimensional too)
 
-+ S     -> {comm | exprs | def}
-+ comm  -> (exprs | arit | loopf | loopw | loopd | test | read | print | plus | minus | pow | fcto | term | decl | retr) _';'_
++ S     -> {decl | comm | def}
++ comm  -> (exprs | loopf | loopw | loopd | test | read | print | plus | minus) _';'_
 
-+ decl  -> \[const\] \[type\] id (_':='_ | _'='_) exprs _';'_
-+ def   -> _'def'_ id _'('_ idlis _') {'_ {comm | exprs}+ [retr] _'}'_
++ type  -> _'int'_ | _'double'_ | _'string'_ | _'char'_ | _'bool'_ | _'void'_
+
++ def   -> _'def'_ type id _'('_ idlis _') {'_ {comm}+ [retr] _'}'_
++ idlis -> id_a {_','_ id_a}
 + retr  -> _'return'_ exprs _';'_
 
-+ idlis -> id {_','_ id}
-+ call  -> id _'('_ lexpr _')'_
++ id_a  -> id { _'['_ exprs _']'_ }
++ decl  -> \[ _'const'_\] type id_a [ ( _':='_ | _'='_ ) exprs ] _';'_
 
-+ attr  -> id (_':='_ | _'='_) exprs _';'_
-+ arit  -> id (spops exprs | _'++'_ | _'--'_) _';'_
++ id_op -> id_a ( call | attr | arit)
++ fcall -> _'('_ lexpr _')'_
++ attr  -> (_':='_ | _'='_) exprs _';'_
++ arit  -> (spops exprs | _'++'_ | _'--'_) _';'_
 + spops -> _'+='_ | _'-='_ | _'/='_ | _'\*='_
-+ plus  -> _'++'_ id
-+ minus -> _'--'_ id
-+ pow   -> exprs '\*\*' exprs
-+ fcto  -> exprs _'!'_
-+ term  -> exprs'?'
-+ type  -> _'int'_ | _'double'_ | _'string'_ | _'char'_ | _'bool'_
 
-+ loopf -> _'for'_ ((attr | id) _'to'_ exprs _'step'_ exprs | _'('_ [attr] _';'_ exprs _';'_ exprs _')'_ ) (comm | _'{'_ {comm} _'}'_)
++ plus  -> _'++'_ id_a
++ minus -> _'--'_ id_a
+
++ loopf -> _'for'_ ((attr | id_a) _'to'_ exprs _'step'_ exprs | _'('_ [attr] _';'_ exprs _';'_ exprs _')'_ ) (comm | _'{'_ {comm} _'}'_)
 + loopw -> _'while'_ exprs (comm | _'{'_ {comm} _'}'_)
 + loopd -> _'do'_ (comm | _'{'_ {comm} _'}'_) _'while'_ exprs _';'_
 
@@ -121,8 +121,8 @@ TODO: arrays (multidimensional too)
 
 + exprs -> expr1 [ rel expr2 ]
 + expr  -> [_'-'_ | _'not'_] term1 {( _'+'_ | _'-'_ | _'|'_ | _'||'_ | _'or'_ ) term2}
-+ term  -> fact1 {( _'*'_ | _'/'_ | _'%'_ | _'&'_ | _'&&'_ | _'and'_ ) fact2}
-+ fact  -> _'('_ exprs _')'_ | const | id | fcto | term | plus | minus | attr | arit | call
++ term  -> fact1 {( _'**'_ | _'*'_ | _'/'_ | _'%'_ | _'&'_ | _'&&'_ | _'and'_ | _'!'_) fact2}
++ fact  -> (_'('_ exprs _')'_ | const | id_a | plus | minus | id_op) [_'?'_]
 + rel   -> _'=='_ | _'!='_ | _'<>'_ | _'>'_ | _'<'_ | _'>='_ | _'<='_
 
 + lexpr -> exprs {, exprs}
