@@ -2,7 +2,7 @@
 
 #include "lang.h"
 #include "lexan.h"
-#include "scal.h"
+#include "baca.h"
 #include "lang.h"
 
 /* FUNCTION PROTOTYPES */
@@ -17,8 +17,8 @@ int
 tokenmatch(Token t)
 {
 	if (lexreg.tk != t) {
-		scal_err = ER_SYN_NE;
-		scal_abort();
+		baca_err = ER_SYN_NE;
+		baca_abort();
 	}
 
 	lexan();
@@ -55,7 +55,7 @@ start_synan(void)
 				break;
 		}
 
-	} while (!eofound && !scal_err);
+	} while (!eofound && !baca_err);
 }
 
 void

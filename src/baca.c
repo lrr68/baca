@@ -7,19 +7,19 @@
 #include "lang.h"
 #include "synan.h"
 #include "symtable.h"
-#include "scal.h"
+#include "baca.h"
 #include "lexan.h"
 
 /* GLOBAL VARIABLES */
 FILE *in_file;      /* input file      */
 char *in_file_name; /* input file name */
-ScalErr scal_err;   /* error code      */
+BacaErr baca_err;   /* error code      */
 
 /* FUNCTION DEFINITIONS */
 void
-scal_abort()
+baca_abort()
 {
-	switch (scal_err) {
+	switch (baca_err) {
 		case ER_LEX_UNID:
 			printf("Character not expected at line %d, col %d\n", line, column);
 			break;
@@ -30,18 +30,18 @@ scal_abort()
 			printf("Token [%s] not expected at line %d, col %d", lexreg.lex, line, column);
 	}
 
-	exit(-(scal_err));
+	exit(-(baca_err));
 }
 
 void
-start_scal(void)
+start_baca(void)
 {
 }
 
 void
 help(void)
 {
-	printf("scal [-h] [-i]\n");
+	printf("baca [-h] [-i]\n");
 	printf("     -h print this help text and exit\n");
 	printf("     -i interpret file\n");
 	printf("     -  interpret from stdin\n");
@@ -87,7 +87,7 @@ main(int argc, char *argv[])
 
 	/* interactive mode */
 	if (interactive) {
-		start_scal();
+		start_baca();
 		return 0;
 	}
 

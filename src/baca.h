@@ -1,18 +1,18 @@
-#ifndef _SCAL_H
-#define _SCAL_H
+#ifndef _baca_H
+#define _baca_H
 
 	/* TYPES */
 	typedef enum {
 		ER_LEX_EOF = 1,
 		ER_LEX_UNID,
 		ER_SYN_NE,
-	} ScalErr;
+	} BacaErr;
 
 	/* FUNCTION PROTOTYPES */
-	void scal_abort();
+	void baca_abort();
 
 	/* GLOBAL VARIABLES */
 	extern FILE *in_file;    /* input file */
-	extern ScalErr scal_err; /* error code */
+	extern BacaErr baca_err; /* error code */
 
 #endif

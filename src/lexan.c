@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "scal.h"
+#include "baca.h"
 #include "codes.h"
 #include "lang.h"
 #include "symtable.h"
@@ -156,7 +156,7 @@ do_state_7(int letter)
 			break;
 		default: /* lexeme unidentified */
 			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
-			scal_err = ER_LEX_UNID;
+			baca_err = ER_LEX_UNID;
 	}
 }
 
@@ -271,7 +271,7 @@ do_state_13(int letter)
 			state = 14;
 			break;
 		default:
-			scal_err = ER_LEX_UNID;
+			baca_err = ER_LEX_UNID;
 	}
 }
 
@@ -311,7 +311,7 @@ do_state_15(int letter)
 			break;
 
 		default:
-			scal_err = ER_LEX_UNID;
+			baca_err = ER_LEX_UNID;
 	}
 }
 
@@ -373,7 +373,7 @@ do_state_18(int letter)
 			break;
 		default:
 			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
-			scal_err = ER_LEX_UNID;
+			baca_err = ER_LEX_UNID;
 	}
 }
 
@@ -539,7 +539,7 @@ lexan(void)
 	int letter;
 	int zero_column = 0;  /* should zero the column ? */
 
-	scal_err = 0;
+	baca_err = 0;
 
 	/* clear state */
 	state = 0;
@@ -555,7 +555,7 @@ lexan(void)
 		goto skip_read;
 	}
 
-	while (state != ACCEPT_LEX && !scal_err && (letter = fgetc(in_file)) != EOF) {
+	while (state != ACCEPT_LEX && !baca_err && (letter = fgetc(in_file)) != EOF) {
 		column++;
 skip_read:
 		if (zero_column)
@@ -802,9 +802,9 @@ skip_read:
 	if (letter == EOF)
 		eofound = 1;
 
-	if (scal_err) {
+	if (baca_err) {
 		lex_err_msg = concatenate(lex_err_msg, (char *) &letter, 1);
-		scal_abort(scal_err);
+		baca_abort(baca_err);
 	}
 
 

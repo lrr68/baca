@@ -3,7 +3,7 @@ SHELL = /bin/sh
 
 # version
 VERSION = 0.0
-PROJ_NAME = scal
+PROJ_NAME = baca
 
 #paths
 PREFIX = /usr/local

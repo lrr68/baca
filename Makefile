@@ -32,7 +32,7 @@ config:
 	@echo "[${CC}] $<"
 	@ ${CC} $< -c ${CFLAGS} -o $@
 
-./build/scal.o: ./src/scal.c ${H_SRC}
+./build/baca.o: ./src/baca.c ${H_SRC}
 	@echo "[${CC}] $<"
 	@ ${CC} $< -c ${CFLAGS} -o $@
 

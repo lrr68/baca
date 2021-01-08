@@ -1,6 +1,6 @@
-# Scal language specifications
+# バカ(Baca) language specifications
 
-Scal (Simple calculator) is a interpreter for a calculator focused language. It's main goals are to provide a easy to use and familiar calculator.
+Baca (Basic calculator) is an interpreter for a calculator focused language. It's main goals are to provide a easy to use and familiar calculator.
 To be familiar the syntax borrows commands from c and python, aimming to type less and offering multiple syntaxes for some commands.
 Since the goal is to be a calculator, operations like power, factorial and termial have exclusive tokens, so it doesn't require a explicit function call to use them.
 
@@ -30,7 +30,7 @@ Aside the boolean type bool, all other types can be checked for true or false. F
 + Termial: defined for numerical types as termial(x) = x + termial(x-1), undefined to strings.
 
 ### Program:
-By default scal will go into interactive mode. If a file is passed as a argument, scall will interpret that file. If a single '-' is passed as a argument, scal will interpret input from stdin.
+By default baca will go into interactive mode. If a file is passed as a argument, baca will interpret that file. If a single '-' is passed as a argument, baca will interpret input from stdin.
 
 ## Tokens:
 The values on the right are reserved words.
@@ -140,7 +140,7 @@ TODO: built in 'in' function to check if element is inside array or string
 + lexpr -> exprs {, exprs}
 
 ## Future features:
-The following is a list of features that i would like to have on Scal.
+The following is a list of features that i would like to have on baca.
 
 + Trigonometrical functions.
 + Other data types like long, short and float.
