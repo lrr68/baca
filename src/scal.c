@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "lang.h"
+#include "synan.h"
 #include "symtable.h"
 #include "scal.h"
 #include "lexan.h"
@@ -25,6 +26,8 @@ scal_abort()
 		case ER_LEX_EOF:
 			printf("Unexpected EOF at line %d", line);
 			break;
+		case ER_SYN_NE:
+			printf("Token [%s] not expected at line %d, col %d", lexreg.lex, line, column);
 	}
 
 	exit(-(scal_err));
@@ -98,7 +101,7 @@ main(int argc, char *argv[])
 		in_file = stdin;
 	}
 
-	start_synal();
+	start_synan();
 
 	return 0;
 }

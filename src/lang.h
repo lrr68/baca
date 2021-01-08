@@ -61,7 +61,7 @@
 	} Token;
 
 	typedef enum {
-		INT_TY = 1,
+		INTEGER = 1,
 		CHAR_TY,
 		STR_TY,
 		DOUBLE_TY,

@@ -327,7 +327,7 @@ do_state_16(int letter)
 		default:
 			state = ACCEPT_LEX;
 			lexreg.tk = LITERAL;
-			lexreg.type = DOUBLE;
+			lexreg.type = DOUBLE_TY;
 			/* read a next token character next lexan call
 			 * does not have to read the first character */
 			if (!IS_WHITE(letter))
@@ -352,7 +352,7 @@ do_state_17(int letter)
 		default:
 			lexreg.tk = LITERAL;
 			state = ACCEPT_LEX;
-			lexreg.type = INT;
+			lexreg.type = INTEGER;
 			/* read a next token character next lexan call
 			 * does not have to read the first character */
 			if (!IS_WHITE(letter))
@@ -388,7 +388,7 @@ do_state_19(int letter)
 		default:
 			state = ACCEPT_LEX;
 			lexreg.tk = LITERAL;
-			lexreg.type = DOUBLE;
+			lexreg.type = DOUBLE_TY;
 			/* read a next token character next lexan call
 			 * does not have to read the first character */
 			if (!IS_WHITE(letter))
@@ -426,7 +426,7 @@ do_state_20(int letter)
 		default: /* value 0 */
 			state = ACCEPT_LEX;
 			lexreg.tk = LITERAL;
-			lexreg.type = INT;
+			lexreg.type = INTEGER;
 			/* read a next token character next lexan call
 			 * does not have to read the first character */
 			if (!IS_WHITE(letter))
@@ -446,7 +446,7 @@ do_state_21(int letter)
 		default:
 			state = ACCEPT_LEX;
 			lexreg.tk = LITERAL;
-			lexreg.type = INT;
+			lexreg.type = INTEGER;
 			/* read a next token character next lexan call
 			 * does not have to read the first character */
 			if (!IS_WHITE(letter))
@@ -471,7 +471,7 @@ do_state_22(int letter)
 		default:
 			state = ACCEPT_LEX;
 			lexreg.tk = LITERAL;
-			lexreg.type = INT;
+			lexreg.type = INTEGER;
 			/* read a next token character next lexan call
 			 * does not have to read the first character */
 			if (!IS_WHITE(letter))
@@ -494,7 +494,7 @@ do_state_23(int letter)
 		default:
 			state = ACCEPT_LEX;
 			lexreg.tk = LITERAL;
-			lexreg.type = INT;
+			lexreg.type = INTEGER;
 			/* read a next token character next lexan call
 			 * does not have to read the first character */
 			if (!IS_WHITE(letter))
@@ -525,7 +525,7 @@ do_state_24(int letter)
 		default:
 			state = ACCEPT_LEX;
 			lexreg.tk = LITERAL;
-			lexreg.type = INT;
+			lexreg.type = INTEGER;
 			/* read a next token character next lexan call
 			 * does not have to read the first character */
 			if (!IS_WHITE(letter))

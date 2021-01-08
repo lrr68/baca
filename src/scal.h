@@ -5,6 +5,7 @@
 	typedef enum {
 		ER_LEX_EOF = 1,
 		ER_LEX_UNID,
+		ER_SYN_NE,
 	} ScalErr;
 
 	/* FUNCTION PROTOTYPES */
