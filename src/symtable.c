@@ -24,7 +24,7 @@ hash(char *str, int mod)
 void
 add_reserved(void)
 {
-	add_symbol("const", CONSTW);
+	add_symbol("const", CONST_TK);
 	add_symbol("int", INT_TK);
 	add_symbol("char", CHAR_TK);
 	add_symbol("string", STRING_TK);

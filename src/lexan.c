@@ -286,7 +286,7 @@ do_state_14(int letter)
 			lexreg.lex = concatenate(lexreg.lex, (char *) &letter, 1);
 			break;
 		default:
-			lexreg.tk = ID;
+			lexreg.tk = IDENTIFIER;
 			state = ACCEPT_LEX;
 
 			/* adds to symbol table */
@@ -815,9 +815,9 @@ skip_read:
 Token
 token_id(const char *t)
 {
-	Token r = ID;
+	Token r = IDENTIFIER;
 	if (IS_TOKEN(t, "const"))
-		r = CONSTW;
+		r = CONST_TK;
 
 	else if (IS_TOKEN(t, "int"))
 		r = INT_TK;

@@ -3,8 +3,8 @@
 
 	/* TYPES */
 	typedef enum {
-		ID = 1,
-		CONSTW,
+		IDENTIFIER = 1,
+		CONST_TK,
 		LITERAL,
 		INT_TK,
 		CHAR_TK,
