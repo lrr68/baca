@@ -133,8 +133,8 @@ TODO: built in 'in' function to check if element is inside array or string
 
 + exprs -> expr1 [ rel expr2 ]
 + expr  -> [_'-'_ | _'not'_] term1 {( _'+'_ | _'-'_ | _'|'_ | _'||'_ | _'or'_ ) term2}
-+ term  -> fact1 {( _'**'_ | _'*'_ | _'/'_ | _'%'_ | _'&'_ | _'&&'_ | _'and'_) fact2} [ _'!'_ ]
-+ fact  -> (_'('_ exprs _')'_ | literal | id_a | plus | minus | id_op) [ _'?'_ ]
++ term  -> fact1 {( _'**'_ | _'*'_ | _'/'_ | _'%'_ | _'&'_ | _'&&'_ | _'and'_) fact2}
++ fact  -> (_'('_ exprs _')'_ | literal | id_a | plus | minus | id_op) [ (_'?'_ | _'!'_ )]
 + rel   -> _'=='_ | _'!='_ | _'<>'_ | _'>'_ | _'<'_ | _'>='_ | _'<='_
 
 + lexpr -> exprs {, exprs}
