@@ -19,6 +19,16 @@ Duodecimal values dec and el are represented by the letters D and E respectivell
 
 Although types do not have to be specified you can specify a type to a constant.
 
+Aside the boolean type bool, all other types can be checked for true or false. For numerical values, 0 is false, different of 0 is true. For string values, a empty string ("") is considered false and anything else is true.
+
+#### Operations:
++ Sum: defined for numerical types as the mathematical sum, defined to strings as concatenation.
++ Subtraction: defined for numerical types as the mathematical subtraction, undefined to strings.
++ Multiplication: defined for numerical types as the mathematical multiplication, defined to strings as a series of concatenations of that string to itself.
++ Division: defined for numerical types as the mathematical division, undefined to strings.
++ Factorial: defined for numerical types as the mathematical factorial, undefined to strings.
++ Termial: defined for numerical types as termial(x) = x + termial(x-1), undefined to strings.
+
 ### Program:
 By default scal will go into interactive mode. If a file is passed as a argument, scall will interpret that file. If a single '-' is passed as a argument, scal will interpret input from stdin.
 
@@ -80,6 +90,7 @@ else     | 'else'
 elseif   | 'elif'
 read     | 'read' | 'input'
 print    | 'print' | 'write'
+in       | 'in'
 </pre>
 
 ## Grammar
@@ -89,6 +100,7 @@ The language allows for declarations anywhere on the code. Like C, every command
 TODO: make a built in sum command (that greek E)
 TODO: builtin avg, mean
 TODO: arrays (multidimensional too)
+TODO: built in 'in' function to check if element is inside array or string
 
 + S     -> {decl | comm | def}
 + comm  -> (exprs | loopf | loopw | loopd | test | read | print | plus | minus) _';'_
