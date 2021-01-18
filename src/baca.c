@@ -24,10 +24,10 @@ baca_abort()
 			printf("Character not expected at line %d, col %d\n", line, column);
 			break;
 		case ER_LEX_EOF:
-			printf("Unexpected EOF at line %d", line);
+			printf("Unexpected EOF at line %d\n", line);
 			break;
 		case ER_SYN_NE:
-			printf("Token [%s] not expected at line %d, col %d", lexreg.lex, line, column);
+			printf("Token [%s] not expected at line %d, col %d\n", lexreg.lex, line, column);
 	}
 
 	exit(-(baca_err));

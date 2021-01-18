@@ -807,7 +807,6 @@ skip_read:
 		baca_abort(baca_err);
 	}
 
-
 	DEBUGLEX("LEX: lexeme:%s token:%d type:%d size: %d\n",lexreg.lex,lexreg.tk,lexreg.type,lexreg.size);
 }
 
